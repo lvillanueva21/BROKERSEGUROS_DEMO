@@ -62,6 +62,28 @@ if (!function_exists('demo_current_script_relative_path')) {
     }
 }
 
+if (!function_exists('demo_public_base_path')) {
+    function demo_public_base_path(): string
+    {
+        $scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+        $relativePath = ltrim(demo_current_script_relative_path(), '/');
+
+        if ($scriptName !== '' && $relativePath !== '' && str_ends_with($scriptName, $relativePath)) {
+            $basePath = substr($scriptName, 0, -strlen($relativePath));
+            return rtrim($basePath, '/') . '/';
+        }
+
+        return '/';
+    }
+}
+
+if (!function_exists('demo_public_url')) {
+    function demo_public_url(string $path = ''): string
+    {
+        return demo_public_base_path() . ltrim($path, '/');
+    }
+}
+
 if (!function_exists('demo_e')) {
     function demo_e(?string $value): string
     {
@@ -249,7 +271,7 @@ if (!function_exists('demo_json')) {
 if (!function_exists('demo_redirect')) {
     function demo_redirect(string $path): never
     {
-        header('Location: ' . demo_url($path));
+        header('Location: ' . demo_public_url($path));
         exit;
     }
 }
@@ -262,7 +284,7 @@ if (!function_exists('demo_require_login')) {
         }
 
         if (demo_is_ajax_request()) {
-            demo_json(false, ['message' => 'Sesión no válida.', 'redirect' => demo_url('index.php')], 401);
+            demo_json(false, ['message' => 'Sesión no válida.', 'redirect' => demo_public_url('index.php')], 401);
         }
 
         demo_redirect('index.php');

@@ -8,7 +8,7 @@ if ($action === 'logout') {
     demo_json(true, [
         'title' => 'Sesión cerrada',
         'message' => 'Se cerró tu sesión correctamente.',
-        'redirect' => demo_url('index.php'),
+        'redirect' => demo_public_url('index.php'),
         'name' => null,
         'role' => null,
     ]);
@@ -81,8 +81,8 @@ demo_push_toast(
 
 demo_json(true, [
     'suppressToast' => true,
-    'redirect' => demo_url('home.php'),
+    'redirect' => demo_public_url('home.php'),
     'name' => $user['full_name'] ?? '',
     'role' => $user['role'] ?? '',
-    'default_route' => demo_url(demo_default_route($user['role'] ?? 'cliente')),
+    'default_route' => demo_public_url(demo_default_route($user['role'] ?? 'cliente')),
 ]);
